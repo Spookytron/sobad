@@ -1,0 +1,133 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
+namespace Lab3_2
+{
+    class Program
+    {
+        public static Dictionary<string, decimal> deli { get; set; }
+        static bool KeepGoing()
+        {
+
+            while (true)
+            {
+                Console.WriteLine("Would you like to try again? (y/n)");
+
+                string response = Console.ReadLine();
+                response = response.ToLower();
+                if (response == "y" || response == "yes")
+                {
+                    return true;
+                }
+                else if (response == "no" || response == "n")
+                {
+                    return false;
+                }
+                else
+                {
+                    Console.WriteLine("Please enter y or n.");
+                }
+            }
+
+        }
+
+        static void PrintMenu()
+        {
+            Console.WriteLine("Here is the menu!");
+            foreach (var pair in deli)
+            {
+                Console.WriteLine($"{pair.Key} is {pair.Value} dollars.");
+            }
+            Console.WriteLine("Would you like to Add a new item (A), Remove an item (R), Change an item's price (C) or Quit (Q)?");
+        }
+
+        static void SetupMenu()
+        {
+            deli = new Dictionary<string, decimal>
+            {
+                ["SAMMICH"] = 5.99m,
+                ["VEGGIES"] = 7.99m,
+                ["SINGLE POTATO"] = 15.00m
+            };
+        }
+
+        static bool MakeDecision()
+        {
+            string response = Console.ReadLine();
+            response = response.ToUpper();
+
+            switch (response)
+            {
+                default:
+                    Console.WriteLine("That is not an acceptable response, please try again.");
+                    return true;
+                case "A":
+                    Console.WriteLine("What item would you like to add?");
+                    string add = Console.ReadLine();
+                    Console.WriteLine("How much is it?");
+                    decimal price = decimal.Parse(Console.ReadLine());
+                    deli.Add(add, price);
+                    Console.WriteLine($"Product {add} was added to the menu at {price} dollars and cents.");
+                    return false;
+                case "R":
+                    Console.WriteLine("What item would you like to remove?");
+                    string entry = Console.ReadLine();
+                    entry = entry.ToUpper();
+                    switch (entry)
+                    {
+                        case "SAMMICH":
+                            deli.Remove("SAMMICH");
+                            Console.WriteLine("'SAMMICH' was removed from the menu.");
+                            break;
+                        case "VEGGIES":
+                            deli.Remove("VEGGIES");
+                            Console.WriteLine("'VEGGIES' were removed from the menu.");
+                            break;
+                        case "SINGLE POTATO":
+                            deli.Remove("SINGLE POTATO");
+                            Console.WriteLine("A 'SINGLE POTATO' was removed from the menu.");
+                            break;
+                        default:
+                            Console.WriteLine("That selection does not exist.");
+                            break;
+
+                    }
+                    return false;
+                case "C":
+                    Console.WriteLine("What item's price would you like to change?");
+                    string ent = Console.ReadLine();
+                    ent = ent.ToUpper();
+                    Console.WriteLine("What is the new price?");
+                    decimal price2 = decimal.Parse(Console.ReadLine());
+                    deli[ent] = price2;
+                    Console.WriteLine($"The new price of {ent} is {price2}");
+                    return false;
+                case "Q":
+                    Console.WriteLine("Thanks for visiting the DevBuild Deli!");
+                    Console.ReadKey();
+                    Environment.Exit(0);
+                    return false;
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Welcome to the DevBuild Deli!");
+            SetupMenu();
+
+            do
+            {
+                do
+                {
+                    PrintMenu();
+                } while (MakeDecision()); //This is abusive and I feel ashamed.
+
+            } while (KeepGoing());
+
+
+
+        }
+
+    }
+}
